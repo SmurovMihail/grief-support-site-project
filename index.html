@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Сервис для помощи людям, переживающим горе</title>
+<style>
+:root{
+  --blue-900:#0b3c73;
+  --blue-700:#1565c0;
+  --blue-500:#2f80ed;
+  --blue-100:#e6f0fb;
+  --blue-050:#f5faff;
+  --green-700:#1b7a52;
+  --green-500:#28a06a;
+  --green-100:#e3f5ec;
+  --white:#ffffff;
+  --ink:#12263a;
+  --muted:#5b7186;
+  --radius:18px;
+  --shadow:0 10px 30px rgba(11,60,115,.10);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  color:var(--ink);
+  background:var(--white);
+  line-height:1.6;
+}
+section{scroll-margin-top:90px}
+.container{width:min(1180px,92%);margin:0 auto}
+
+.site-header{
+  position:sticky;top:0;z-index:50;
+  background:rgba(255,255,255,.96);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--blue-100);
+  box-shadow:0 4px 18px rgba(11,60,115,.06);
+}
+.header-inner{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:24px;padding:14px 0;flex-wrap:wrap;
+}
+.logo{
+  display:flex;align-items:center;gap:12px;
+  font-weight:700;font-size:1.15rem;
+  color:var(--blue-900);text-decoration:none;
+}
+.logo-mark{
+  display:grid;place-items:center;width:40px;height:40px;
+  border-radius:13px;
+  background:linear-gradient(135deg,var(--blue-700),var(--green-500));
+  color:#fff;
+}
+.logo-mark svg{width:22px;height:22px;fill:#fff}
+.nav{display:flex;gap:4px;flex-wrap:wrap}
+.nav a{
+  padding:9px 15px;border-radius:999px;
+  color:var(--blue-900);text-decoration:none;
+  font-size:.94rem;font-weight:500;transition:.2s;
+}
+.nav a:hover{background:var(--blue-100);color:var(--blue-700)}
+
+.hero{
+  background:linear-gradient(135deg,var(--blue-900) 0%,var(--blue-700) 55%,var(--green-700) 100%);
+  color:#fff;padding:78px 0 88px;position:relative;overflow:hidden;
+}
+.hero::after{
+  content:"";position:absolute;right:-120px;top:-120px;
+  width:420px;height:420px;border-radius:50%;
+  background:rgba(255,255,255,.07);
+}
+.hero::before{
+  content:"";position:absolute;left:-90px;bottom:-160px;
+  width:320px;height:320px;border-radius:50%;
+  background:rgba(40,160,106,.22);
+}
+.hero-inner{position:relative;z-index:2;max-width:760px}
+.hero-tag{
+  display:inline-block;
+  background:rgba(255,255,255,.14);
+  border:1px solid rgba(255,255,255,.28);
+  padding:6px 16px;border-radius:999px;
+  font-size:.82rem;letter-spacing:.06em;text-transform:uppercase;
+  margin-bottom:22px;
+}
+.hero h1{font-size:clamp(1.9rem,4vw,2.9rem);line-height:1.2;margin-bottom:18px}
+.hero-text{font-size:1.08rem;color:#dbe9f8;margin-bottom:30px}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap}
+.btn{
+  display:inline-block;padding:13px 28px;border-radius:999px;
+  text-decoration:none;font-weight:600;font-size:.95rem;transition:.25s;
+}
+.btn-primary{background:var(--green-500);color:#fff;box-shadow:0 8px 22px rgba(40,160,106,.35)}
+.btn-primary:hover{background:#22905e;transform:translateY(-2px)}
+.btn-ghost{border:1.5px solid rgba(255,255,255,.6);color:#fff}
+.btn-ghost:hover{background:rgba(255,255,255,.14);transform:translateY(-2px)}
+
+.section{padding:66px 0}
+.section.alt{background:linear-gradient(180deg,var(--blue-050),#ffffff)}
+.section-title{
+  font-size:clamp(1.5rem,3vw,2rem);
+  color:var(--blue-900);margin-bottom:10px;position:relative;
+  padding-bottom:14px;
+}
+.section-title::after{
+  content:"";position:absolute;left:0;bottom:0;
+  width:64px;height:4px;border-radius:4px;
+  background:linear-gradient(90deg,var(--blue-700),var(--green-500));
+}
+.section-sub{color:var(--muted);margin-bottom:30px;max-width:720px}
+
+.wip{
+  border:2px dashed #b9d3ee;
+  background:repeating-linear-gradient(45deg,#f7fbff,#f7fbff 12px,#eef6ff 12px,#eef6ff 24px);
+  border-radius:var(--radius);
+  padding:40px 26px;
+  text-align:center;
+  color:var(--muted);
+  font-weight:600;
+  letter-spacing:.03em;
+}
+.wip small{
+  display:block;font-size:.82rem;font-weight:500;
+  margin-top:8px;color:#8aa2b8;letter-spacing:0;
+}
+
+.about-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(290px,1fr));
+  gap:22px;
+  margin-bottom:56px;
+}
+.info-card{
+  background:#fff;
+  border:1px solid var(--blue-100);
+  border-radius:var(--radius);
+  padding:26px;
+  box-shadow:var(--shadow);
+  display:flex;flex-direction:column;gap:16px;
+}
+.info-card h3{
+  font-size:1.08rem;color:var(--blue-900);
+  display:flex;align-items:center;gap:10px;
+}
+.info-card h3::before{
+  content:"";width:10px;height:10px;border-radius:3px;
+  background:var(--green-500);flex:none;
+}
+.info-card .wip{padding:26px 18px;font-size:.92rem;flex:1;display:flex;flex-direction:column;justify-content:center}
+
+.team-block{
+  background:#fff;
+  border:1px solid var(--blue-100);
+  border-radius:calc(var(--radius) + 6px);
+  padding:38px 30px 46px;
+  box-shadow:var(--shadow);
+}
+.team-head{margin-bottom:30px}
+.team-head h3{font-size:1.45rem;color:var(--blue-900);margin-bottom:8px}
+.team-head p{color:var(--muted);font-size:.96rem}
+
+.team-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:24px;
+}
+.member{
+  background:linear-gradient(180deg,#ffffff,var(--blue-050));
+  border:1px solid var(--blue-100);
+  border-top:4px solid var(--green-500);
+  border-radius:var(--radius);
+  padding:28px 20px 26px;
+  text-align:center;
+  box-shadow:0 6px 20px rgba(11,60,115,.07);
+  transition:transform .25s ease,box-shadow .25s ease;
+}
+.member:hover{
+  transform:translateY(-7px);
+  box-shadow:0 18px 38px rgba(11,60,115,.16);
+}
+.avatar{
+  width:120px;height:120px;
+  margin:0 auto 18px;
+  border-radius:50%;
+  overflow:hidden;
+  background:var(--blue-100);
+  display:grid;place-items:center;
+  border:4px solid #fff;
+  outline:3px solid var(--blue-100);
+}
+.avatar img{width:100%;height:100%;object-fit:cover;display:block}
+.avatar.no-photo{
+  background:linear-gradient(135deg,var(--blue-700),var(--green-500));
+  color:#fff;font-weight:700;font-size:1.9rem;letter-spacing:.06em;
+}
+.avatar.no-photo::after{content:attr(data-initials)}
+.member-name{font-size:1.05rem;color:var(--blue-900);margin-bottom:6px}
+.member-course{font-size:.9rem;color:var(--muted);margin-bottom:14px}
+.member-role{
+  display:inline-block;
+  background:var(--green-100);
+  color:var(--green-700);
+  padding:5px 16px;
+  border-radius:999px;
+  font-size:.85rem;
+  font-weight:600;
+}
+
+.blog-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:24px;
+}
+.blog-post{
+  background:#fff;
+  border:1px solid var(--blue-100);
+  border-radius:var(--radius);
+  padding:26px;
+  box-shadow:var(--shadow);
+  transition:transform .25s ease,box-shadow .25s ease;
+}
+.blog-post:hover{
+  transform:translateY(-5px);
+  box-shadow:0 16px 34px rgba(11,60,115,.14);
+}
+.blog-date{
+  display:inline-block;
+  background:var(--blue-100);
+  color:var(--blue-900);
+  padding:4px 12px;
+  border-radius:999px;
+  font-size:.8rem;
+  font-weight:600;
+  margin-bottom:14px;
+}
+.blog-post h3{
+  font-size:1.1rem;
+  color:var(--blue-900);
+  margin-bottom:10px;
+}
+.blog-post p{
+  color:var(--muted);
+  font-size:.95rem;
+}
+
+.site-footer{
+  background:linear-gradient(135deg,var(--blue-900),var(--green-700));
+  color:#dbe9f8;
+  padding:40px 0;
+  margin-top:20px;
+}
+.footer-inner{
+  display:flex;justify-content:space-between;
+  align-items:center;gap:18px;flex-wrap:wrap;
+  font-size:.92rem;
+}
+.footer-inner strong{color:#fff}
+
+@media (max-width:900px){
+  .team-grid{grid-template-columns:repeat(2,1fr);gap:20px}
+}
+@media (max-width:640px){
+  .header-inner{padding:12px 0}
+  .nav a{padding:7px 11px;font-size:.88rem}
+  .hero{padding:56px 0 64px}
+  .section{padding:48px 0}
+  .team-block{padding:28px 18px 34px}
+  .team-grid{grid-template-columns:1fr;gap:18px}
+  .avatar{width:100px;height:100px}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="logo" href="#top">
+      <span class="logo-mark">
+        <svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.7-9.6-9A5.4 5.4 0 0 1 12 6.3 5.4 5.4 0 0 1 21.6 12c-2.1 4.3-9.6 9-9.6 9z"/></svg>
+      </span>
+      Сервис поддержки
+    </a>
+    <nav class="nav">
+      <a href="#about">О проекте</a>
+      <a href="#team">Команда</a>
+      <a href="#service">Сервис</a>
+      <a href="#auth">Авторизация</a>
+      <a href="#blog">Блог</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <section class="hero" id="top">
+    <div class="container hero-inner">
+      <span class="hero-tag">Современные технологии программирования</span>
+      <h1>Сервис для помощи людям, переживающим горе</h1>
+      <p class="hero-text">
+        Веб-приложение, которое помогает человеку в трудный период: бережное сопровождение,
+        понятная информация и поддержка рядом.
+      </p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#about">О проекте</a>
+        <a class="btn btn-ghost" href="#team">Наша команда</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="about">
+    <div class="container">
+      <h2 class="section-title">О проекте</h2>
+      <p class="section-sub">Информация о разработке приложения.</p>
+
+      <div class="about-grid">
+        <article class="info-card">
+          <h3>Название проекта</h3>
+          <div class="wip">На доработке</div>
+        </article>
+
+        <article class="info-card">
+          <h3>Назначение приложения</h3>
+          <div class="wip">На доработке</div>
+        </article>
+
+        <article class="info-card">
+          <h3>Используемые технологии</h3>
+          <div class="wip">На доработке</div>
+        </article>
+
+        <article class="info-card">
+          <h3>Этапы разработки проекта</h3>
+          <div class="wip">На доработке</div>
+        </article>
+      </div>
+
+      <div class="team-block" id="team">
+        <div class="team-head">
+          <h3>Команда проекта</h3>
+          <p>Информация о разработчиках</p>
+        </div>
+
+        <div class="team-grid">
+
+          <article class="member">
+            <div class="avatar" data-initials="СМ">
+              <img src="images/Смуров.jpg" alt="Смуров Михаил"
+                   onerror="this.parentElement.classList.add('no-photo'); this.remove();">
+            </div>
+            <h4 class="member-name">Смуров Михаил</h4>
+            <p class="member-course">4 курс, ПМИб-23</p>
+            <span class="member-role">Проект-менеджер</span>
+          </article>
+
+          <article class="member">
+            <div class="avatar" data-initials="ША">
+              <img src="images/Шимкович.jpg" alt="Шимкович Артем"
+                   onerror="this.parentElement.classList.add('no-photo'); this.remove();">
+            </div>
+            <h4 class="member-name">Шимкович Артем</h4>
+            <p class="member-course">4 курс, ПИЭ-23</p>
+            <span class="member-role">Разработчик</span>
+          </article>
+
+          <article class="member">
+            <div class="avatar" data-initials="ФВ">
+              <img src="images/Фролов.jpg" alt="Фролов Владислав"
+                   onerror="this.parentElement.classList.add('no-photo'); this.remove();">
+            </div>
+            <h4 class="member-name">Фролов Владислав</h4>
+            <p class="member-course">3 курс, ПМИб-24</p>
+            <span class="member-role">Разработчик</span>
+          </article>
+
+          <article class="member">
+            <div class="avatar" data-initials="ВО">
+              <img src="images/Воловик.jpg" alt="Воловик Олег"
+                   onerror="this.parentElement.classList.add('no-photo'); this.remove();">
+            </div>
+            <h4 class="member-name">Воловик Олег</h4>
+            <p class="member-course">4 курс, МОАИС-23</p>
+            <span class="member-role">Тестировщик</span>
+          </article>
+
+          <article class="member">
+            <div class="avatar" data-initials="ГА">
+              <img src="images/Гамидов.jpg" alt="Гамидов Амин"
+                   onerror="this.parentElement.classList.add('no-photo'); this.remove();">
+            </div>
+            <h4 class="member-name">Гамидов Амин</h4>
+            <p class="member-course">2 курс, МОАИС-25</p>
+            <span class="member-role">Тестировщик</span>
+          </article>
+
+          <article class="member">
+            <div class="avatar" data-initials="КЕ">
+              <img src="images/Крутикова.jpg" alt="Крутикова Екатерина"
+                   onerror="this.parentElement.classList.add('no-photo'); this.remove();">
+            </div>
+            <h4 class="member-name">Крутикова Екатерина</h4>
+            <p class="member-course">2 курс, МОАИС-25</p>
+            <span class="member-role">Проектировщик</span>
+          </article>
+
+          <article class="member">
+            <div class="avatar" data-initials="ТН">
+              <img src="images/Таргаев.jpg" alt="Таргаев Никита"
+                   onerror="this.parentElement.classList.add('no-photo'); this.remove();">
+            </div>
+            <h4 class="member-name">Таргаев Никита</h4>
+            <p class="member-course">4 курс, МОАИС-23</p>
+            <span class="member-role">Проектировщик</span>
+          </article>
+
+          <article class="member">
+            <div class="avatar" data-initials="СД">
+              <img src="images/Снытко.jpg" alt="Снытко Дмитрий"
+                   onerror="this.parentElement.classList.add('no-photo'); this.remove();">
+            </div>
+            <h4 class="member-name">Снытко Дмитрий</h4>
+            <p class="member-course">4 курс, ПМИб-23</p>
+            <span class="member-role">Аналитик</span>
+          </article>
+
+          <article class="member">
+            <div class="avatar" data-initials="КИ">
+              <img src="images/Котов.jpg" alt="Котов Илья"
+                   onerror="this.parentElement.classList.add('no-photo'); this.remove();">
+            </div>
+            <h4 class="member-name">Котов Илья</h4>
+            <p class="member-course">2 курс, ПМИб-25</p>
+            <span class="member-role">Аналитик</span>
+          </article>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section alt" id="service">
+    <div class="container">
+      <h2 class="section-title">Сервис</h2>
+      <p class="section-sub">Основной функционал приложения.</p>
+      <div class="wip">На доработке<small>Раздел находится в разработке</small></div>
+    </div>
+  </section>
+
+  <section class="section" id="auth">
+    <div class="container">
+      <h2 class="section-title">Авторизация и роли пользователей</h2>
+      <p class="section-sub">Регистрация, вход и разграничение прав доступа.</p>
+      <div class="wip">На доработке<small>Раздел находится в разработке</small></div>
+    </div>
+  </section>
+
+  <section class="section alt" id="blog">
+    <div class="container">
+      <h2 class="section-title">Блог</h2>
+      <p class="section-sub">Обновления и отчёты по разработке проекта.</p>
+
+      <div class="blog-grid">
+
+        <article class="blog-post">
+          <span class="blog-date">4 сентября 2026</span>
+          <h3>Начало работы над проектом</h3>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <span><strong>Сервис для помощи людям, переживающим горе</strong></span>
+    </div>
+</footer>
+
+</body>
+</html>

@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Сервис для помощи людям, переживающим горе</title>
+<title>Сервис «Горемыка» для помощи людям, переживающим горе</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
 <style>
 :root{
   --blue-900:#0b3c73;
@@ -149,6 +150,12 @@ section{scroll-margin-top:90px}
   background:var(--green-500);flex:none;
 }
 .info-card .wip{padding:26px 18px;font-size:.92rem;flex:1;display:flex;flex-direction:column;justify-content:center}
+.info-card p{color:var(--ink);font-size:.95rem}
+.info-card p + p{margin-top:10px}
+.info-card .project-name{
+  font-size:1.35rem;font-weight:700;
+  color:var(--green-700);
+}
 
 .team-block{
   background:#fff;
@@ -210,7 +217,7 @@ section{scroll-margin-top:90px}
 
 .blog-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
   gap:24px;
 }
 .blog-post{
@@ -225,6 +232,10 @@ section{scroll-margin-top:90px}
   transform:translateY(-5px);
   box-shadow:0 16px 34px rgba(11,60,115,.14);
 }
+.blog-head{
+  display:flex;flex-wrap:wrap;align-items:center;gap:8px;
+  margin-bottom:14px;
+}
 .blog-date{
   display:inline-block;
   background:var(--blue-100);
@@ -233,7 +244,15 @@ section{scroll-margin-top:90px}
   border-radius:999px;
   font-size:.8rem;
   font-weight:600;
-  margin-bottom:14px;
+}
+.blog-role{
+  display:inline-block;
+  background:var(--green-100);
+  color:var(--green-700);
+  padding:4px 12px;
+  border-radius:999px;
+  font-size:.8rem;
+  font-weight:600;
 }
 .blog-post h3{
   font-size:1.1rem;
@@ -243,6 +262,31 @@ section{scroll-margin-top:90px}
 .blog-post p{
   color:var(--muted);
   font-size:.95rem;
+}
+.blog-content{
+  color:var(--ink);
+  font-size:.95rem;
+  line-height:1.65;
+  margin-top:6px;
+}
+.blog-content p{margin-bottom:10px}
+.blog-content h1,.blog-content h2,.blog-content h3{
+  color:var(--blue-900);
+  font-size:1.02rem;
+  margin:14px 0 8px;
+}
+.blog-content ul,.blog-content ol{margin:10px 0 10px 22px}
+.blog-content li{margin-bottom:6px}
+.blog-content table{border-collapse:collapse;width:100%;margin:12px 0;font-size:.9rem}
+.blog-content th,.blog-content td{border:1px solid var(--blue-100);padding:8px;text-align:left;vertical-align:top}
+.blog-content th{background:var(--blue-050)}
+.blog-video{
+  display:block;
+  width:100%;
+  max-width:100%;
+  border-radius:12px;
+  margin-top:8px;
+  background:#000;
 }
 
 .site-footer{
@@ -280,7 +324,7 @@ section{scroll-margin-top:90px}
       <span class="logo-mark">
         <svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.7-9.6-9A5.4 5.4 0 0 1 12 6.3 5.4 5.4 0 0 1 21.6 12c-2.1 4.3-9.6 9-9.6 9z"/></svg>
       </span>
-      Сервис поддержки
+      Сервис поддержки «Горемыка»
     </a>
     <nav class="nav">
       <a href="#about">О проекте</a>
@@ -296,7 +340,7 @@ section{scroll-margin-top:90px}
 
   <section class="hero" id="top">
     <div class="container hero-inner">
-      <h1>Сервис для помощи людям, переживающим горе</h1>
+      <h1>Сервис «Горемыка» предназначен для помощи людям, переживающим горе</h1>
       <p class="hero-text">
         Веб-приложение, которое помогает человеку в трудный период: бережное сопровождение,
         понятная информация и поддержка рядом.
@@ -316,12 +360,16 @@ section{scroll-margin-top:90px}
       <div class="about-grid">
         <article class="info-card">
           <h3>Название проекта</h3>
-          <div class="wip">На доработке</div>
+          <p class="project-name">«Горемыка»</p>
+          <p style="color:var(--muted);font-size:.88rem"></p>
         </article>
 
         <article class="info-card">
           <h3>Назначение приложения</h3>
-          <div class="wip">На доработке</div>
+          <p>
+            Сервис представляет собой адаптивную веб-версию для комплексной поддержки людей,
+            переживающих утрату близкого или иной глубокий кризис.
+          </p>
         </article>
 
         <article class="info-card">
@@ -459,11 +507,38 @@ section{scroll-margin-top:90px}
       <h2 class="section-title">Блог</h2>
       <p class="section-sub">Обновления и отчёты по разработке проекта.</p>
 
-      <div class="blog-grid">
+      <div class="blog-grid" id="blog-grid">
 
-        <article class="blog-post">
-          <span class="blog-date">4 сентября 2026</span>
+        <article class="blog-post" data-sort="2026-09-04">
+          <div class="blog-head">
+            <span class="blog-date">4 сентября 2026</span>
+            <span class="blog-role">ПМ</span>
+          </div>
           <h3>Начало работы над проектом</h3>
+        </article>
+
+        <article class="blog-post" data-sort="2026-09-12">
+          <div class="blog-head">
+            <span class="blog-date">11 сентября 2026</span>
+            <span class="blog-role">Аналитик</span>
+          </div>
+          <h3>Отчет предпроектное исследование и спецификация требований</h3>
+          </video>
+        </article>
+
+      </div>
+
+      <div class="blog-grid" id="blog-grid">
+
+        <article class="blog-post" data-sort="2026-09-12">
+          <div class="blog-head">
+            <span class="blog-date">12 сентября 2026</span>
+            <span class="blog-role">ПМ</span>
+          </div>
+          <h3>Тренинг</h3>
+          <video class="blog-video" controls preload="metadata">
+            <source src="images/Тренинг.mp4" type="video/mp4">
+          </video>
         </article>
 
       </div>
@@ -474,9 +549,263 @@ section{scroll-margin-top:90px}
 
 <footer class="site-footer">
   <div class="container footer-inner">
-    <span><strong>Сервис для помощи людям, переживающим горе</strong></span>
-    </div>
+    <span><strong>Сервис «Горемыка» для помощи людям, переживающим горе</strong></span>
+    <span>Проект по дисциплине «Современные технологии программирования»</span>
+  </div>
 </footer>
+
+<script>
+(function(){
+  const monthNames = ['января','февраля','марта','апреля','мая','июня',
+                      'июля','августа','сентября','октября','ноября','декабря'];
+
+  const reports = [
+    { file: '10.09 Отчет предпроектное и спецификация.docx', role: 'Аналитики', year: 2026 },
+    { file: '11.09 Проверка.docx',                          role: 'Аналитики', year: 2026 }
+  ];
+
+  const grid = document.getElementById('blog-grid');
+  const cacheBust = '?v=' + Date.now();
+
+  function parseFileName(name){
+    const base = name.replace(/\.docx$/i, '');
+    const m = base.match(/^(\d{1,2})\.(\d{1,2})\s+(.+)$/);
+    if(!m) return null;
+    return { day: parseInt(m[1],10), month: parseInt(m[2],10), title: m[3].trim() };
+  }
+
+  function buildSortKey(y,m,d){
+    return `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+  }
+
+  function formatDateRu(y,m,d){
+    return `${d} ${monthNames[m-1]} ${y}`;
+  }
+
+  function sortBlog(){
+    const posts = Array.from(grid.querySelectorAll('.blog-post'));
+    posts.sort((a,b) => (a.dataset.sort || '').localeCompare(b.dataset.sort || ''));
+    posts.forEach(p => grid.appendChild(p));
+  }
+
+  function createPost(dateStr, sortKey, role, title, contentNode){
+    const article = document.createElement('article');
+    article.className = 'blog-post';
+    article.dataset.sort = sortKey;
+
+    const head = document.createElement('div');
+    head.className = 'blog-head';
+    const dateEl = document.createElement('span');
+    dateEl.className = 'blog-date';
+    dateEl.textContent = dateStr;
+    const roleEl = document.createElement('span');
+    roleEl.className = 'blog-role';
+    roleEl.textContent = role;
+    head.appendChild(dateEl);
+    head.appendChild(roleEl);
+
+    const titleEl = document.createElement('h3');
+    titleEl.textContent = title;
+
+    article.appendChild(head);
+    article.appendChild(titleEl);
+
+    if(contentNode){
+      const contentEl = document.createElement('div');
+      contentEl.className = 'blog-content';
+      contentEl.appendChild(contentNode);
+      article.appendChild(contentEl);
+    }
+    grid.appendChild(article);
+    return article;
+  }
+
+  function buildErrorBlock(file, triedUrls, reason, serverInfo){
+    const wrap = document.createElement('div');
+    wrap.style.color = '#b00020';
+    wrap.style.fontSize = '.9rem';
+    wrap.style.lineHeight = '1.55';
+
+    const p1 = document.createElement('p');
+    p1.style.fontWeight = '700';
+    p1.style.marginBottom = '6px';
+    p1.textContent = 'Отчёт не загружен: ' + reason;
+    wrap.appendChild(p1);
+
+    if(serverInfo){
+      const p2 = document.createElement('p');
+      p2.style.marginBottom = '10px';
+      p2.textContent = serverInfo;
+      wrap.appendChild(p2);
+    }
+
+    const p3 = document.createElement('p');
+    p3.style.marginBottom = '8px';
+    p3.innerHTML = 'Проверьте файл напрямую:';
+    wrap.appendChild(p3);
+
+    const linkP = document.createElement('p');
+    linkP.style.marginBottom = '12px';
+    const a = document.createElement('a');
+    a.href = 'reports/' + encodeURIComponent(file);
+    a.target = '_blank';
+    a.rel = 'noopener';
+    a.textContent = 'reports/' + file;
+    a.style.color = '#1565c0';
+    a.style.wordBreak = 'break-all';
+    linkP.appendChild(a);
+    wrap.appendChild(linkP);
+
+    const details = document.createElement('details');
+    const summary = document.createElement('summary');
+    summary.textContent = 'Проверенные адреса (' + triedUrls.length + ')';
+    details.appendChild(summary);
+    const ul = document.createElement('ul');
+    ul.style.margin = '8px 0 0 20px';
+    triedUrls.forEach(u => {
+      const li = document.createElement('li');
+      li.textContent = u;
+      li.style.wordBreak = 'break-all';
+      ul.appendChild(li);
+    });
+    details.appendChild(ul);
+    wrap.appendChild(details);
+    return wrap;
+  }
+
+  function buildUrlCandidates(file){
+    const nfc = file.normalize('NFC');
+    const nfd = file.normalize('NFD');
+    const lower = file.toLowerCase();
+    const set = new Set();
+    const add = u => { if(u) set.add(u); };
+    [file, nfc, nfd, lower].forEach(v => {
+      add('reports/' + v);
+      add('reports/' + encodeURI(v));
+      add('reports/' + encodeURIComponent(v));
+      add('./reports/' + encodeURIComponent(v));
+    });
+    return Array.from(set);
+  }
+
+  function xhrGet(url){
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', url, true);
+      xhr.responseType = 'arraybuffer';
+      xhr.onload = () => {
+        if(xhr.status >= 200 && xhr.status < 300){
+          resolve(xhr.response);
+        }else{
+          reject(new Error('HTTP ' + xhr.status));
+        }
+      };
+      xhr.onerror = () => reject(new Error('сеть недоступна'));
+      xhr.send();
+    });
+  }
+
+  async function tryFetch(url){
+    try{
+      const res = await fetch(url, { cache: 'no-store' });
+      if(res.ok){
+        const buf = await res.arrayBuffer();
+        if(buf.byteLength > 0) return buf;
+        throw new Error('файл 0 байт');
+      }
+      throw new Error('HTTP ' + res.status);
+    }catch(e){
+      const buf = await xhrGet(url);
+      if(buf && buf.byteLength > 0) return buf;
+      throw e;
+    }
+  }
+
+  async function fetchReport(file){
+    if(location.protocol === 'file:'){
+      throw {
+        reason: 'страница открыта как локальный файл (file://)',
+        tried: ['—'],
+        serverInfo: 'Браузер запрещает fetch/XHR к file://. Откройте сайт через GitHub Pages или локальный сервер (например, python -m http.server).'
+      };
+    }
+
+    const tried = [];
+    let lastServerInfo = '';
+    for(const base of buildUrlCandidates(file)){
+      const url = base + cacheBust;
+      tried.push(url);
+      try{
+        return await tryFetch(url);
+      }catch(e){
+        lastServerInfo = e.message || '';
+      }
+    }
+    throw {
+      reason: 'файл не найден ни по одному адресу',
+      tried,
+      serverInfo: lastServerInfo
+    };
+  }
+
+  function waitForMammoth(timeoutMs){
+    return new Promise((resolve) => {
+      const start = Date.now();
+      (function check(){
+        if(typeof window.mammoth !== 'undefined' && window.mammoth.convertToHtml){
+          resolve(window.mammoth);
+        }else if(Date.now() - start > timeoutMs){
+          resolve(null);
+        }else{
+          setTimeout(check, 120);
+        }
+      })();
+    });
+  }
+
+  async function loadReports(){
+    const mammothLib = await waitForMammoth(8000);
+
+    for(const report of reports){
+      const parsed = parseFileName(report.file);
+      if(!parsed) continue;
+
+      const dateStr = formatDateRu(report.year, parsed.month, parsed.day);
+      const sortKey = buildSortKey(report.year, parsed.month, parsed.day);
+
+      if(!mammothLib){
+        createPost(dateStr, sortKey, report.role, parsed.title,
+          buildErrorBlock(report.file, ['—'],
+            'библиотека mammoth.js не загрузилась (CDN недоступен)',
+            'Проверьте доступ к cdnjs.cloudflare.com или положите mammoth.browser.min.js рядом с index.html.'));
+        continue;
+      }
+
+      try{
+        const buf = await fetchReport(report.file);
+        const result = await mammothLib.convertToHtml({ arrayBuffer: buf });
+        const contentEl = document.createElement('div');
+        contentEl.innerHTML = result.value;
+        createPost(dateStr, sortKey, report.role, parsed.title, contentEl);
+      }catch(err){
+        const reason = (err && err.reason) ? err.reason : (err && err.message ? err.message : 'неизвестная ошибка');
+        const tried = (err && err.tried) ? err.tried : ['—'];
+        const info = (err && err.serverInfo) ? err.serverInfo : '';
+        createPost(dateStr, sortKey, report.role, parsed.title,
+          buildErrorBlock(report.file, tried, reason, info));
+      }
+    }
+
+    sortBlog();
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', loadReports);
+  }else{
+    loadReports();
+  }
+})();
+</script>
 
 </body>
 </html>

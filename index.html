@@ -526,9 +526,15 @@ section{scroll-margin-top:90px}
             <span class="blog-role">ПМ</span>
           </div>
           <h3>Тренинг</h3>
-          <video class="blog-video" controls preload="metadata">
-            <source src="images/Тренинг.mp4" type="video/mp4">
-          </video>
+          <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px;">
+            <iframe
+              src="https://www.youtube.com/embed/ntRQbzrI9Is?si=aWZZ6W3ppft-g9iL"
+              title="Тренинг"
+              style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen>
+            </iframe>
+          </div>
         </article>
 
       </div>
@@ -550,11 +556,11 @@ section{scroll-margin-top:90px}
                       'июля','августа','сентября','октября','ноября','декабря'];
 
   const reports = [
-    { file: '10.09 Отчет предпроектное исследование и спецификация требований.docx', role: 'Аналитик', year: 2026 },
+    { file: '10.09 Отчет предпроектное и спецификация.docx', role: 'Аналитики', year: 2026 },
+    { file: '11.09 Проверка.docx',                          role: 'Аналитики', year: 2026 }
   ];
 
   const grid = document.getElementById('blog-grid');
-  const cacheBust = '?v=' + Date.now();
 
   function parseFileName(name){
     const base = name.replace(/\.docx$/i, '');
@@ -606,135 +612,31 @@ section{scroll-margin-top:90px}
       article.appendChild(contentEl);
     }
     grid.appendChild(article);
-    return article;
-  }
-
-  function buildErrorBlock(file, triedUrls, reason, serverInfo){
-    const wrap = document.createElement('div');
-    wrap.style.color = '#b00020';
-    wrap.style.fontSize = '.9rem';
-    wrap.style.lineHeight = '1.55';
-
-    const p1 = document.createElement('p');
-    p1.style.fontWeight = '700';
-    p1.style.marginBottom = '6px';
-    p1.textContent = 'Отчёт не загружен: ' + reason;
-    wrap.appendChild(p1);
-
-    if(serverInfo){
-      const p2 = document.createElement('p');
-      p2.style.marginBottom = '10px';
-      p2.textContent = serverInfo;
-      wrap.appendChild(p2);
-    }
-
-    const p3 = document.createElement('p');
-    p3.style.marginBottom = '8px';
-    p3.innerHTML = 'Проверьте файл напрямую:';
-    wrap.appendChild(p3);
-
-    const linkP = document.createElement('p');
-    linkP.style.marginBottom = '12px';
-    const a = document.createElement('a');
-    a.href = 'reports/' + encodeURIComponent(file);
-    a.target = '_blank';
-    a.rel = 'noopener';
-    a.textContent = 'reports/' + file;
-    a.style.color = '#1565c0';
-    a.style.wordBreak = 'break-all';
-    linkP.appendChild(a);
-    wrap.appendChild(linkP);
-
-    const details = document.createElement('details');
-    const summary = document.createElement('summary');
-    summary.textContent = 'Проверенные адреса (' + triedUrls.length + ')';
-    details.appendChild(summary);
-    const ul = document.createElement('ul');
-    ul.style.margin = '8px 0 0 20px';
-    triedUrls.forEach(u => {
-      const li = document.createElement('li');
-      li.textContent = u;
-      li.style.wordBreak = 'break-all';
-      ul.appendChild(li);
-    });
-    details.appendChild(ul);
-    wrap.appendChild(details);
-    return wrap;
   }
 
   function buildUrlCandidates(file){
     const nfc = file.normalize('NFC');
-    const nfd = file.normalize('NFD');
-    const lower = file.toLowerCase();
     const set = new Set();
-    const add = u => { if(u) set.add(u); };
-    [file, nfc, nfd, lower].forEach(v => {
-      add('reports/' + v);
-      add('reports/' + encodeURI(v));
-      add('reports/' + encodeURIComponent(v));
-      add('./reports/' + encodeURIComponent(v));
-    });
+    set.add('reports/' + file);
+    set.add('reports/' + encodeURI(file));
+    set.add('reports/' + encodeURIComponent(file));
+    set.add('reports/' + encodeURIComponent(nfc));
+    set.add('./reports/' + encodeURIComponent(file));
     return Array.from(set);
   }
 
-  function xhrGet(url){
-    return new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.open('GET', url, true);
-      xhr.responseType = 'arraybuffer';
-      xhr.onload = () => {
-        if(xhr.status >= 200 && xhr.status < 300){
-          resolve(xhr.response);
-        }else{
-          reject(new Error('HTTP ' + xhr.status));
-        }
-      };
-      xhr.onerror = () => reject(new Error('сеть недоступна'));
-      xhr.send();
-    });
-  }
-
-  async function tryFetch(url){
-    try{
-      const res = await fetch(url, { cache: 'no-store' });
-      if(res.ok){
-        const buf = await res.arrayBuffer();
-        if(buf.byteLength > 0) return buf;
-        throw new Error('файл 0 байт');
-      }
-      throw new Error('HTTP ' + res.status);
-    }catch(e){
-      const buf = await xhrGet(url);
-      if(buf && buf.byteLength > 0) return buf;
-      throw e;
-    }
-  }
-
   async function fetchReport(file){
-    if(location.protocol === 'file:'){
-      throw {
-        reason: 'страница открыта как локальный файл (file://)',
-        tried: ['—'],
-        serverInfo: 'Браузер запрещает fetch/XHR к file://. Откройте сайт через GitHub Pages или локальный сервер (например, python -m http.server).'
-      };
-    }
-
-    const tried = [];
-    let lastServerInfo = '';
+    const bust = '?v=' + Date.now();
     for(const base of buildUrlCandidates(file)){
-      const url = base + cacheBust;
-      tried.push(url);
       try{
-        return await tryFetch(url);
-      }catch(e){
-        lastServerInfo = e.message || '';
-      }
+        const res = await fetch(base + bust, { cache: 'no-store' });
+        if(res.ok){
+          const buf = await res.arrayBuffer();
+          if(buf.byteLength > 0) return buf;
+        }
+      }catch(e){}
     }
-    throw {
-      reason: 'файл не найден ни по одному адресу',
-      tried,
-      serverInfo: lastServerInfo
-    };
+    throw new Error('файл не найден');
   }
 
   function waitForMammoth(timeoutMs){
@@ -762,27 +664,24 @@ section{scroll-margin-top:90px}
       const dateStr = formatDateRu(report.year, parsed.month, parsed.day);
       const sortKey = buildSortKey(report.year, parsed.month, parsed.day);
 
+      const contentEl = document.createElement('div');
+
       if(!mammothLib){
-        createPost(dateStr, sortKey, report.role, parsed.title,
-          buildErrorBlock(report.file, ['—'],
-            'библиотека mammoth.js не загрузилась (CDN недоступен)',
-            'Проверьте доступ к cdnjs.cloudflare.com или положите mammoth.browser.min.js рядом с index.html.'));
+        contentEl.innerHTML = '<p style="color:#b00020">Не загрузилась библиотека mammoth.js.</p>';
+        createPost(dateStr, sortKey, report.role, parsed.title, contentEl);
         continue;
       }
 
       try{
         const buf = await fetchReport(report.file);
         const result = await mammothLib.convertToHtml({ arrayBuffer: buf });
-        const contentEl = document.createElement('div');
         contentEl.innerHTML = result.value;
-        createPost(dateStr, sortKey, report.role, parsed.title, contentEl);
       }catch(err){
-        const reason = (err && err.reason) ? err.reason : (err && err.message ? err.message : 'неизвестная ошибка');
-        const tried = (err && err.tried) ? err.tried : ['—'];
-        const info = (err && err.serverInfo) ? err.serverInfo : '';
-        createPost(dateStr, sortKey, report.role, parsed.title,
-          buildErrorBlock(report.file, tried, reason, info));
+        contentEl.innerHTML = '<p style="color:#b00020">Не удалось загрузить отчёт: ' +
+          report.file + '</p>';
       }
+
+      createPost(dateStr, sortKey, report.role, parsed.title, contentEl);
     }
 
     sortBlog();
